@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Pelebox.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ccc946878900bb8cda0486fc842da504bbfe05f4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Pelebox.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Pelebox.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
