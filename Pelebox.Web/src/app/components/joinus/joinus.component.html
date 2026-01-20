@@ -1,0 +1,388 @@
+<div class="min-h-screen bg-white font-sans text-slate-900">
+
+  <!-- NEW: TOP NAVIGATION WITH LOGIN BUTTON -->
+  <nav class="absolute top-0 left-0 w-full z-50 flex justify-between items-center px-8 py-6">
+    <div class="text-white font-black text-2xl italic tracking-tighter uppercase">Pelebox</div>
+    <button (click)="login()"
+            class="bg-white/10 backdrop-blur-md border border-white/30 text-white px-6 py-2 rounded-full font-bold hover:bg-white hover:text-blue-900 transition-all shadow-lg">
+      Employee Login
+    </button>
+  </nav>
+
+  <!-- 1. HEADER SECTION (HERO) -->
+  <header class="relative h-[60vh] w-full overflow-hidden flex items-center justify-center">
+    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-[2000ms] hover:scale-105"
+         style="background-image: url('https://peleboxdata.blob.core.windows.net/peleboxfiles/images/team.jpg');">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-b from-slate-900/80 via-blue-900/40 to-white/0"></div>
+
+    <div class="relative z-10 text-center px-4">
+      <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight drop-shadow-2xl uppercase">
+        Join the <span class="text-blue-300">Pelebox</span> Team
+      </h1>
+      <p class="mt-4 text-xl md:text-2xl text-slate-100 max-w-2xl mx-auto font-medium drop-shadow-md">
+        Leveraging technology to improve access to medicine.
+      </p>
+    </div>
+  </header>
+  <main class="relative z-20 -mt-24 px-6 pb-24 max-w-7xl mx-auto">
+
+    <!-- 1. DYNAMIC GRID VIEW (Visible only if no job is selected) -->
+    <div *ngIf="!selectedJob" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in duration-500">
+      <div *ngFor="let item of openings"
+           (click)="viewJobDetails(item)"
+           [ngClass]="item.hoverBorder"
+           class="group cursor-pointer bg-slate-50 border border-slate-200 p-8 rounded-3xl hover:bg-white hover:shadow-2xl transition-all duration-300">
+
+        <span [ngClass]="item.badgeClass" class="inline-block px-4 py-1 rounded-full text-xs font-bold uppercase mb-4">
+          {{item.category}}
+        </span>
+        <h3 class="text-2xl font-bold text-slate-900 mb-2">{{item.title}}</h3>
+        <p class="text-slate-500 mb-6 line-clamp-2">{{item.description}}</p>
+
+        <div class="flex justify-between items-center border-t border-slate-100 pt-6 mt-4">
+          <span class="text-slate-700 font-medium italic">{{item.location}}</span>
+          <button [ngClass]="item.btnColor" class="font-bold group-hover:translate-x-2 transition-transform">
+            View Details →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. FULL PAGE DETAIL VIEW (Visible only when a job is selected) -->
+    <div *ngIf="selectedJob" class="animate-in slide-in-from-bottom-6 duration-500">
+
+      <!-- Back Button (Resets both job and form state) -->
+      <button (click)="closeDetails()" class="flex items-center text-blue-600 font-bold mb-8 hover:translate-x-[-4px] transition-transform">
+        <span class="mr-2">←</span> Back to All Positions
+      </button>
+
+      <div class="bg-white rounded-[2.5rem] overflow-hidden shadow-2xl border border-slate-100 min-h-[70vh]">
+
+        <!-- Dynamic Header -->
+        <div [ngClass]="selectedJob.headerColor" class="p-10 md:p-16 text-white transition-all duration-500" *ngIf="isApplying">
+          <div class="flex items-center gap-4 mb-4">
+            <span class="bg-white/20 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">{{selectedJob.category}}</span>
+            <span class="text-white/80 font-medium italic text-sm">{{selectedJob.location}}</span>
+          </div>
+          <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tight">
+            {{ isApplying ? 'Application Form' : selectedJob.title }}
+          </h1>
+          <p class="mt-2 text-blue-100 font-medium">Applying for: {{selectedJob.title}}</p>
+        </div>
+
+        <div class="p-10 md:p-20">
+
+          <!-- STEP 1: ROLE OVERVIEW (Hidden when applying) -->
+          <div *ngIf="!isApplying" class="animate-in fade-in duration-500">
+            <div class="prose prose-lg max-w-none text-slate-700">
+              <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 border-b pb-2">Job Description</h4>
+              <div [innerHTML]="selectedJob.details" class="leading-relaxed text-xl"></div>
+            </div>
+
+            <div class="mt-16 p-10 bg-slate-50 rounded-[2rem] border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
+              <div>
+                <p class="font-bold text-slate-900 text-xl">Ready to make an impact?</p>
+                <p class="text-slate-500">Complete the application form to begin your journey with Pelebox.</p>
+              </div>
+              <button (click)="isApplying = true" class="w-full md:w-auto px-12 py-4 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-700 shadow-xl transition-all active:scale-95">
+                Apply Now
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2: PELEBOX APPLICATION FORM (Visible when Apply Now is clicked) -->
+          <form *ngIf="isApplying" [formGroup]="applyForm" (ngSubmit)="submitApplication()" class="space-y-12 animate-in slide-in-from-right-10 duration-500">
+
+            <!-- Personal Section -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <h3 class="md:col-span-2 text-xl font-bold text-slate-900 border-l-4 border-blue-600 pl-4">Personal Details</h3>
+
+              <div class="space-y-2">
+                <label class="text-[10px] font-bold uppercase text-slate-500">First Name *</label>
+                <input formControlName="FirstName" type="text"
+                       [ngClass]="isInvalid('FirstName') ? 'border-red-500 bg-red-50' : 'border-slate-200'"
+                       class="w-full p-4 bg-slate-50 border rounded-xl outline-none transition-all">
+                <p *ngIf="isInvalid('FirstName')" class="text-red-500 text-[10px] font-bold">Required (min 2 chars)</p>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-[10px] font-bold uppercase text-slate-400">Surname *</label>
+                <input formControlName="Surname" type="text" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600 outline-none">
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-[10px] font-bold uppercase text-slate-500">Email Address *</label>
+                <input formControlName="Email" type="email"
+                       [ngClass]="isInvalid('Email') ? 'border-red-500 bg-red-50' : 'border-slate-200'"
+                       class="w-full p-4 bg-slate-50 border rounded-xl outline-none">
+                <p *ngIf="isInvalid('Email')" class="text-red-500 text-[10px] font-bold">Enter a valid email address</p>
+              </div>
+
+              <!-- Cellphone -->
+              <div class="space-y-1">
+                <label class="text-[10px] font-bold uppercase text-slate-500">SA Cellphone Number *</label>
+                <input formControlName="CellphoneNumber" type="text" placeholder="0123456789"
+                       [ngClass]="isInvalid('CellphoneNumber') ? 'border-red-500 bg-red-50' : 'border-slate-200'"
+                       class="w-full p-4 bg-slate-50 border rounded-xl outline-none">
+                <p *ngIf="isInvalid('CellphoneNumber')" class="text-red-500 text-[10px] font-bold">Enter valid cellphone number</p>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-[10px] font-bold uppercase text-slate-400">LinkedIn Profile [Optional but recommended]: *</label>
+                <input formControlName="LinkedInUrl" type="text" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600 outline-none">
+              </div>
+
+              <div class="space-y-1">
+                <label class="text-[10px] font-bold uppercase text-slate-500 tracking-widest">
+                  Gender *
+                </label>
+
+                <select formControlName="GenderId"
+                        [ngClass]="isInvalid('GenderId') ? 'border-red-500 bg-red-50' : 'border-slate-200'"
+                        class="w-full p-4 bg-slate-50 border rounded-xl outline-none transition-all appearance-none cursor-pointer">
+
+                  <!-- Default placeholder option -->
+                  <option [ngValue]="null" disabled selected>Select Gender</option>
+
+                  <!-- Dynamic loop using ngFor -->
+                  <option *ngFor="let g of genders" [value]="g.id">
+                    {{ g.name }}
+                  </option>
+
+                </select>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-[10px] font-bold uppercase text-slate-400">ID / Passport Number *</label>
+                <input formControlName="IdORPassport" type="text" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl">
+              </div>
+            </section>
+
+            <!-- Professional Section -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <h3 class="md:col-span-2 text-xl font-bold text-slate-900 border-l-4 border-emerald-600 pl-4">Qualifications & Licensing</h3>
+
+              <div class="space-y-2 md:col-span-2">
+                <label class="text-[10px] font-bold uppercase text-slate-400">Highest Qualification *</label>
+                <input formControlName="Qualification" type="text" placeholder="e.g. BEng Computer Engineering" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl">
+              </div>
+
+              <select formControlName="NQFLevelId" class="...">
+                <option [ngValue]="null" disabled>Select NQF Level</option>
+                <option *ngFor="let level of nqfLevels" [value]="level.id">
+                  {{ level.name }}
+                </option>
+              </select>
+
+              <div class="space-y-2">
+                <label class="text-[10px] font-bold uppercase text-slate-400">Drivers License Code *</label>
+                <input formControlName="DriversLicenseCode" type="text" placeholder="e.g. Code B / EB" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl">
+              </div>
+            </section>
+
+            <!-- Requirements Section -->
+            <!-- Checkboxes with Red Text for Unchecked Mandatory Fields -->
+            <div class="p-6 bg-blue-50/50 rounded-2xl border border-blue-100 space-y-4">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input formControlName="WorkPermission" type="checkbox" class="w-5 h-5 accent-blue-600">
+                <span class="text-sm font-bold" [class.text-red-600]="isInvalid('WorkPermission')">I have legal permission to work in South Africa *</span>
+              </label>
+
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input formControlName="HasDrivingLicense" type="checkbox" class="w-5 h-5 accent-blue-600">
+                <span class="text-sm font-bold" [class.text-red-600]="isInvalid('HasDrivingLicense')">Ability to Travel? *</span>
+              </label>
+
+
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input formControlName="AbilityToTravel" type="checkbox" class="w-5 h-5 accent-blue-600">
+                <span class="text-sm font-bold" [class.text-red-600]="isInvalid('AbilityToTravel')">I possess a valid Driver's License *</span>
+              </label>
+            </div>
+
+            <!-- Motivation Section -->
+            <section class="space-y-2">
+              <label class="text-[10px] font-bold uppercase text-slate-400">Why are you the perfect fit for Pelebox? *</label>
+              <textarea formControlName="WhySuitableForRole" rows="5" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl outline-none" placeholder="Share your passion for healthcare technology..."></textarea>
+            </section>
+
+            <!-- Form Actions -->
+            <div class="flex flex-col md:flex-row gap-4 pt-6 border-t">
+              <button type="submit" class="flex-1 py-5 bg-blue-600 text-white font-black rounded-2xl shadow-xl hover:bg-blue-700 transition-all">Submit Application</button>
+              <button type="button" (click)="isApplying = false" class="px-10 py-5 border border-slate-200 font-bold rounded-2xl text-slate-400 hover:bg-slate-50">Cancel</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </main>
+  <!-- 3. FOOTER SECTION -->
+  <footer class="bg-slate-900 text-slate-300 pt-16 pb-8 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 border-b border-slate-800 pb-12">
+      <div>
+        <h4 class="text-white font-bold text-lg mb-4">Pelebox</h4>
+        <p class="text-sm leading-relaxed">
+          Smart locker system that allows patients to collect their medication in under 22 seconds.
+        </p>
+      </div>
+      <div class="flex flex-col space-y-2">
+        <h4 class="text-white font-bold text-lg mb-4">Explore</h4>
+        <a href="https://www.pelebox.com" class="hover:text-blue-400 transition-colors text-sm">About Us</a>
+        <a href="https://www.pelebox.com" class="hover:text-blue-400 transition-colors text-sm">Our Technology</a>
+      </div>
+      <div>
+        <h4 class="text-white font-bold text-lg mb-4">Get In Touch</h4>
+        <p class="text-sm mb-2">📍 Pretoria, South Africa</p>
+        <p class="text-sm mb-2">📧 info@pelebox.com</p>
+        <p class="text-sm">🌐 <a href="https://www.pelebox.com" target="_blank" class="hover:underline">www.pelebox.com</a></p>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto text-center text-xs text-slate-500">
+      <p>&copy; 2026 Pelebox. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+
+<!-- Hero Section with Background Image -->
+<!--<div class="relative min-h-screen w-full flex flex-col items-center justify-start bg-cover bg-center bg-fixed bg-[url('https://peleboxdata.blob.core.windows.net/peleboxfiles/images/team.jpg')]">-->
+<!-- Dark Overlay for Readability -->
+<!--<div class="absolute inset-0 bg-slate-900/70 backdrop-blur-[1px]"></div>-->
+<!-- Content Container -->
+<!--<div class="relative z-10 container mx-auto px-6 py-20">-->
+<!-- Header Text -->
+<!--<div class="text-center max-w-3xl mx-auto mb-16">
+  <h1 class="text-5xl md:text-6xl font-extrabold text-white tracking-tight mb-6">
+    Build the future <span class="text-blue-400">with us.</span>
+  </h1>
+  <p class="text-lg md:text-xl text-slate-300 leading-relaxed">
+    We’re looking for innovators, dreamers, and doers. Explore our open roles and find your next challenge.
+  </p>
+</div>-->
+<!-- Job Cards Grid -->
+<!--<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">-->
+<!-- Card 1 (Glassmorphism Effect) -->
+<!--<div class="group relative p-8 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-lg hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
+  <div class="flex justify-between items-start mb-4">
+    <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-400/10 rounded-full border border-blue-400/20">Engineering</span>
+    <span class="text-slate-400 text-sm font-medium">Remote</span>
+  </div>
+  <h3 class="text-2xl font-bold text-white mb-3">Lead Angular Architect</h3>
+  <p class="text-slate-400 mb-6 line-clamp-2">Shape the future of our enterprise platform using the latest Angular 2026 features.</p>
+  <button class="w-full py-3 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all active:scale-95">
+    Apply Now
+  </button>
+</div>-->
+<!-- Card 2 -->
+<!--<div class="group relative p-8 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-lg hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
+  <div class="flex justify-between items-start mb-4">
+    <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 rounded-full border border-emerald-400/20">Design</span>
+    <span class="text-slate-400 text-sm font-medium">Hybrid</span>
+  </div>
+  <h3 class="text-2xl font-bold text-white mb-3">Product Designer</h3>
+  <p class="text-slate-400 mb-6 line-clamp-2">Create seamless, accessible experiences for millions of users worldwide.</p>
+  <button class="w-full py-3 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all active:scale-95">
+    Apply Now
+  </button>
+</div>-->
+<!-- Card 3 -->
+<!--<div class="group relative p-8 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-lg hover:bg-white/10 transition-all duration-300 hover:-translate-y-2">
+        <div class="flex justify-between items-start mb-4">
+          <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider text-purple-400 bg-purple-400/10 rounded-full border border-purple-400/20">Marketing</span>
+          <span class="text-slate-400 text-sm font-medium">London, UK</span>
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-3">Growth Strategist</h3>
+        <p class="text-slate-400 mb-6 line-clamp-2">Scale our presence across emerging markets and drive global adoption.</p>
+        <button class="w-full py-3 px-6 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-lg shadow-blue-600/20 transition-all active:scale-95">
+          Apply Now
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>-->
+<!--<div class="min-h-screen bg-white font-sans">-->
+<!-- 1. HEADER SECTION (HERO) -->
+<!--<header class="relative h-[60vh] w-full overflow-hidden flex items-center justify-center">-->
+<!-- Background Image -->
+<!--<div class="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-105"
+     style="background-image: url('https://peleboxdata.blob.core.windows.net/peleboxfiles/images/team.jpg');">
+</div>-->
+<!-- Dark Gradient Overlay for text readability -->
+<!--<div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-white"></div>-->
+<!-- Hero Content -->
+<!--<div class="relative z-10 text-center px-4">
+    <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight drop-shadow-lg">
+      Join Our <span class="text-blue-400">Team</span>
+    </h1>
+    <p class="mt-4 text-xl md:text-2xl text-slate-200 max-w-2xl mx-auto font-medium">
+      We are innovators, thinkers, and creators. Help us build the future.
+    </p>
+    <button class="mt-8 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-full transition-all transform hover:scale-105 shadow-xl">
+      View Openings
+    </button>
+  </div>
+</header>-->
+<!-- 2. BODY SECTION (OPENINGS) -->
+<!--<main class="relative z-20 -mt-20 px-6 pb-20">
+  <div class="max-w-7xl mx-auto">-->
+<!-- Intro Text in Body -->
+<!--<div class="bg-white rounded-3xl p-8 md:p-12 shadow-2xl shadow-slate-200/50 mb-12 border border-slate-100">
+  <h2 class="text-3xl font-bold text-slate-900 mb-4">Why work with us?</h2>
+  <p class="text-slate-600 text-lg leading-relaxed max-w-4xl">
+    At our core, we value collaboration, diversity, and continuous growth. We provide an environment where your ideas turn into products used by millions. Whether you're an engineer, designer, or strategist, there's a place for you here.
+  </p>
+</div>-->
+<!-- Job Listings Grid -->
+<!--<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">-->
+<!-- Job Card 1 -->
+<!--<div class="group bg-slate-50 border border-slate-200 p-8 rounded-2xl hover:bg-blue-50 hover:border-blue-200 transition-all duration-300">
+  <div class="flex items-center gap-2 mb-4">
+    <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
+    <span class="text-sm font-bold text-blue-600 uppercase tracking-widest">Engineering</span>
+  </div>
+  <h3 class="text-2xl font-bold text-slate-900 group-hover:text-blue-700 transition-colors">Frontend Developer</h3>
+  <p class="mt-3 text-slate-500">Expertise in Angular & Tailwind CSS. Remote friendly.</p>
+  <hr class="my-6 border-slate-200">
+  <div class="flex justify-between items-center">
+    <span class="text-slate-900 font-semibold">Full-time</span>
+    <a href="#" class="text-blue-600 font-bold hover:underline">Apply →</a>
+  </div>
+</div>-->
+<!-- Job Card 2 -->
+<!--<div class="group bg-slate-50 border border-slate-200 p-8 rounded-2xl hover:bg-emerald-50 hover:border-emerald-200 transition-all duration-300">
+  <div class="flex items-center gap-2 mb-4">
+    <span class="w-3 h-3 bg-emerald-500 rounded-full"></span>
+    <span class="text-sm font-bold text-emerald-600 uppercase tracking-widest">Product</span>
+  </div>
+  <h3 class="text-2xl font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">UI/UX Designer</h3>
+  <p class="mt-3 text-slate-500">Focus on accessibility and clean, modern aesthetics.</p>
+  <hr class="my-6 border-slate-200">
+  <div class="flex justify-between items-center">
+    <span class="text-slate-900 font-semibold">Hybrid</span>
+    <a href="#" class="text-emerald-600 font-bold hover:underline">Apply →</a>
+  </div>
+</div>-->
+<!-- Job Card 3 -->
+<!--<div class="group bg-slate-50 border border-slate-200 p-8 rounded-2xl hover:bg-purple-50 hover:border-purple-200 transition-all duration-300">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="w-3 h-3 bg-purple-500 rounded-full"></span>
+            <span class="text-sm font-bold text-purple-600 uppercase tracking-widest">Operations</span>
+          </div>
+          <h3 class="text-2xl font-bold text-slate-900 group-hover:text-purple-700 transition-colors">Project Manager</h3>
+          <p class="mt-3 text-slate-500">Agile expert to lead our high-performance delivery teams.</p>
+          <hr class="my-6 border-slate-200">
+          <div class="flex justify-between items-center">
+            <span class="text-slate-900 font-semibold">On-site</span>
+            <a href="#" class="text-purple-600 font-bold hover:underline">Apply →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+</div>-->

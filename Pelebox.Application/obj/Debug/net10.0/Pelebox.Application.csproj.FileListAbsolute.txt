@@ -1,0 +1,15 @@
+D:\Pelebox\Pelebox.Application\bin\Debug\net10.0\Pelebox.Application.deps.json
+D:\Pelebox\Pelebox.Application\bin\Debug\net10.0\Pelebox.Application.dll
+D:\Pelebox\Pelebox.Application\bin\Debug\net10.0\Pelebox.Application.pdb
+D:\Pelebox\Pelebox.Application\bin\Debug\net10.0\Pelebox.Domain.dll
+D:\Pelebox\Pelebox.Application\bin\Debug\net10.0\Pelebox.Domain.pdb
+D:\Pelebox\Pelebox.Application\obj\Debug\net10.0\Pelebox.Application.csproj.AssemblyReference.cache
+D:\Pelebox\Pelebox.Application\obj\Debug\net10.0\Pelebox.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\Pelebox\Pelebox.Application\obj\Debug\net10.0\Pelebox.Application.AssemblyInfoInputs.cache
+D:\Pelebox\Pelebox.Application\obj\Debug\net10.0\Pelebox.Application.AssemblyInfo.cs
+D:\Pelebox\Pelebox.Application\obj\Debug\net10.0\Pelebox.Application.csproj.CoreCompileInputs.cache
+D:\Pelebox\Pelebox.Application\obj\Debug\net10.0\Pelebox..0EF04011.Up2Date
+D:\Pelebox\Pelebox.Application\obj\Debug\net10.0\Pelebox.Application.dll
+D:\Pelebox\Pelebox.Application\obj\Debug\net10.0\refint\Pelebox.Application.dll
+D:\Pelebox\Pelebox.Application\obj\Debug\net10.0\Pelebox.Application.pdb
+D:\Pelebox\Pelebox.Application\obj\Debug\net10.0\ref\Pelebox.Application.dll

@@ -1,0 +1,5 @@
+
+"*.sln" 
+node_modules/
+.vs/
+"*.slnx" 

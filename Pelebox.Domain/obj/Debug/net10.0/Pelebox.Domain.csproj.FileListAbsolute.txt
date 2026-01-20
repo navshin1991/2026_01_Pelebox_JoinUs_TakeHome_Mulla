@@ -1,0 +1,11 @@
+D:\Pelebox\Pelebox.Domain\bin\Debug\net10.0\Pelebox.Domain.deps.json
+D:\Pelebox\Pelebox.Domain\bin\Debug\net10.0\Pelebox.Domain.dll
+D:\Pelebox\Pelebox.Domain\bin\Debug\net10.0\Pelebox.Domain.pdb
+D:\Pelebox\Pelebox.Domain\obj\Debug\net10.0\Pelebox.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Pelebox\Pelebox.Domain\obj\Debug\net10.0\Pelebox.Domain.AssemblyInfoInputs.cache
+D:\Pelebox\Pelebox.Domain\obj\Debug\net10.0\Pelebox.Domain.AssemblyInfo.cs
+D:\Pelebox\Pelebox.Domain\obj\Debug\net10.0\Pelebox.Domain.csproj.CoreCompileInputs.cache
+D:\Pelebox\Pelebox.Domain\obj\Debug\net10.0\Pelebox.Domain.dll
+D:\Pelebox\Pelebox.Domain\obj\Debug\net10.0\refint\Pelebox.Domain.dll
+D:\Pelebox\Pelebox.Domain\obj\Debug\net10.0\Pelebox.Domain.pdb
+D:\Pelebox\Pelebox.Domain\obj\Debug\net10.0\ref\Pelebox.Domain.dll
